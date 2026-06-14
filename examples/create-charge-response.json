@@ -1,0 +1,25 @@
+{
+  "data": {
+    "id": "ch_abc123def456",
+    "description": "Order #1234 payment",
+    "amount": 14844,
+    "status": "unpaid",
+    "fiat_value": 10.00,
+    "currency": "USD",
+    "source_fiat_value": 10.00,
+    "lightning_invoice": {
+      "expires_at": 1749772800,
+      "payreq": "lnbc100u1pn3zqvppsp5example..."
+    },
+    "chain_invoice": {
+      "address": "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh",
+      "settled_at": null
+    },
+    "address": "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh",
+    "created_at": 1749686400,
+    "order_id": "order-1234",
+    "callback_url": "https://example.com/webhooks/opennode",
+    "success_url": "https://example.com/thank-you",
+    "auto_settle": false
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "type": "ln",
+  "amount": 5000,
+  "address": "lnbc50u1p3zqvppsp5example...",
+  "callback_url": "https://example.com/webhooks/withdrawal"
+}

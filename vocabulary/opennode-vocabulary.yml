@@ -1,0 +1,85 @@
+vocabulary:
+  - term: satoshi
+    definition: >
+      The smallest unit of Bitcoin, equal to one hundred millionth (0.00000001) of a Bitcoin (BTC).
+      All monetary amounts in the OpenNode API are expressed in satoshis by default.
+    aliases:
+      - sat
+      - sats
+  - term: charge
+    definition: >
+      A payment request created by a merchant that includes both a Lightning Network invoice
+      and an on-chain Bitcoin address. The customer pays the charge to complete a transaction.
+    aliases:
+      - invoice
+      - payment request
+  - term: Lightning Network
+    definition: >
+      A second-layer payment protocol built on top of Bitcoin that enables fast, low-fee
+      micropayments through payment channels. OpenNode uses Lightning for instant payment settlement.
+    aliases:
+      - LN
+      - Lightning
+  - term: BOLT11
+    definition: >
+      A standard encoding format for Lightning Network payment requests (invoices). BOLT11
+      invoices encode the payment amount, recipient, expiry, and routing information.
+    aliases:
+      - Lightning invoice
+      - payment request
+  - term: on-chain
+    definition: >
+      Refers to Bitcoin transactions recorded directly on the Bitcoin blockchain, as opposed
+      to off-chain (Lightning Network) transactions. On-chain transactions are slower and
+      typically have higher fees than Lightning payments.
+    aliases:
+      - chain
+      - blockchain transaction
+  - term: auto_settle
+    definition: >
+      An OpenNode feature that automatically converts Bitcoin payments into fiat currency
+      at the time of receipt. Requires the merchant to have a bank account linked to their
+      OpenNode account.
+  - term: LNURL
+    definition: >
+      A set of protocols built on top of Lightning Network that simplify interactions such
+      as static payment addresses (LNURL-Pay) and withdrawals (LNURL-Withdraw).
+    aliases:
+      - LNURL-Pay
+      - LNURL-Withdraw
+  - term: static address
+    definition: >
+      A reusable Bitcoin payment address or Lightning address that can accept multiple
+      payments without generating a new invoice each time. Suitable for donations and
+      recurring payments.
+  - term: withdrawal
+    definition: >
+      An outgoing Bitcoin payment initiated by the merchant, either to an on-chain Bitcoin
+      address or a Lightning Network invoice. Used for payouts, payroll, and contractor payments.
+  - term: refund
+    definition: >
+      A reverse payment issued by a merchant to return funds to a customer after a completed
+      charge. Refunds can be full or partial and are sent to the customer's Bitcoin or Lightning address.
+  - term: callback_url
+    definition: >
+      A webhook endpoint URL provided by the merchant when creating a charge or withdrawal.
+      OpenNode sends an HTTP POST request to this URL when the payment status changes.
+    aliases:
+      - webhook URL
+  - term: hashed_order
+    definition: >
+      An HMAC-SHA256 signature included in OpenNode webhook payloads, computed using the
+      merchant's API key. Used to verify that the webhook notification is authentic and
+      was sent by OpenNode.
+  - term: ttl
+    definition: >
+      Time-to-live for a charge invoice, expressed in minutes. After the TTL expires,
+      the invoice can no longer be paid. Minimum 10 minutes, maximum 4320 minutes (72 hours).
+  - term: split_to_btc_bps
+    definition: >
+      A charge parameter specifying the percentage of the payment to retain in Bitcoin,
+      expressed in basis points (1 basis point = 0.01%). The remainder is settled in fiat.
+  - term: exchange rate
+    definition: >
+      The conversion rate between Bitcoin (or satoshis) and a fiat currency at a given
+      moment. OpenNode locks the exchange rate at the time of charge creation for fiat-denominated charges.

@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://api-evangelist.github.io/opennode/json-schema/opennode-charge.json",
+  "title": "OpenNode Charge",
+  "description": "Schema for an OpenNode Bitcoin payment charge object returned by the Charges API.",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique charge identifier.",
+      "examples": ["ch_abc123def456"]
+    },
+    "description": {
+      "type": "string",
+      "description": "Payment description displayed in the payer's wallet."
+    },
+    "amount": {
+      "type": "integer",
+      "description": "Charge amount in satoshis.",
+      "minimum": 1
+    },
+    "status": {
+      "type": "string",
+      "enum": ["unpaid", "processing", "paid", "expired"],
+      "description": "Current payment status of the charge."
+    },
+    "fiat_value": {
+      "type": "number",
+      "description": "Fiat value of the charge at the time of creation."
+    },
+    "currency": {
+      "type": "string",
+      "description": "ISO 4217 fiat currency code used for conversion.",
+      "pattern": "^[A-Z]{3}$",
+      "examples": ["USD", "EUR", "GBP"]
+    },
+    "source_fiat_value": {
+      "type": "number",
+      "description": "Source fiat value used for conversion."
+    },
+    "lightning_invoice": {
+      "type": "object",
+      "description": "Lightning Network payment invoice.",
+      "properties": {
+        "expires_at": {
+          "type": "integer",
+          "description": "Unix timestamp when the Lightning invoice expires."
+        },
+        "payreq": {
+          "type": "string",
+          "description": "BOLT11 Lightning payment request string."
+        }
+      }
+    },
+    "chain_invoice": {
+      "type": "object",
+      "description": "On-chain Bitcoin invoice details.",
+      "properties": {
+        "address": {
+          "type": "string",
+          "description": "On-chain Bitcoin address for payment."
+        },
+        "settled_at": {
+          "type": "integer",
+          "description": "Unix timestamp when the on-chain payment was settled."
+        }
+      }
+    },
+    "address": {
+      "type": "string",
+      "description": "Primary on-chain Bitcoin address for the charge."
+    },
+    "created_at": {
+      "type": "integer",
+      "description": "Unix timestamp of charge creation."
+    },
+    "order_id": {
+      "type": "string",
+      "description": "Merchant internal order reference identifier."
+    },
+    "callback_url": {
+      "type": "string",
+      "format": "uri",
+      "description": "Webhook endpoint URL for payment status notifications."
+    },
+    "success_url": {
+      "type": "string",
+      "format": "uri",
+      "description": "Redirect URL for the customer after successful payment."
+    },
+    "auto_settle": {
+      "type": "boolean",
+      "description": "Whether automatic fiat settlement is enabled.",
+      "default": false
+    }
+  },
+  "required": ["id", "amount", "status", "created_at"]
+}

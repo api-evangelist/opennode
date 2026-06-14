@@ -1,0 +1,13 @@
+{
+  "amount": 10000,
+  "currency": "USD",
+  "description": "Order #1234 payment",
+  "customer_name": "Jane Doe",
+  "customer_email": "jane@example.com",
+  "order_id": "order-1234",
+  "callback_url": "https://example.com/webhooks/opennode",
+  "success_url": "https://example.com/thank-you",
+  "auto_settle": false,
+  "ttl": 1440,
+  "notify_receiver": false
+}

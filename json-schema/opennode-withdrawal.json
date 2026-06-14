@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://api-evangelist.github.io/opennode/json-schema/opennode-withdrawal.json",
+  "title": "OpenNode Withdrawal",
+  "description": "Schema for an OpenNode Bitcoin withdrawal object representing a payout to an on-chain address or Lightning invoice.",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique withdrawal identifier."
+    },
+    "type": {
+      "type": "string",
+      "enum": ["chain", "ln"],
+      "description": "Withdrawal type — 'chain' for on-chain Bitcoin, 'ln' for Lightning Network."
+    },
+    "amount": {
+      "type": "integer",
+      "description": "Withdrawal amount in satoshis.",
+      "minimum": 1
+    },
+    "status": {
+      "type": "string",
+      "enum": ["pending", "processing", "confirmed", "failed"],
+      "description": "Current status of the withdrawal."
+    },
+    "address": {
+      "type": "string",
+      "description": "Destination Bitcoin address or Lightning invoice."
+    },
+    "fee": {
+      "type": "integer",
+      "description": "Network fee charged in satoshis.",
+      "minimum": 0
+    },
+    "created_at": {
+      "type": "integer",
+      "description": "Unix timestamp of withdrawal creation."
+    },
+    "processed_at": {
+      "type": ["integer", "null"],
+      "description": "Unix timestamp when the withdrawal was processed. Null if not yet processed."
+    }
+  },
+  "required": ["id", "type", "amount", "status", "address", "created_at"]
+}

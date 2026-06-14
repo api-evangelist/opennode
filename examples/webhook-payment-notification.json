@@ -1,0 +1,17 @@
+{
+  "id": "ch_abc123def456",
+  "callback_url": "https://example.com/webhooks/opennode",
+  "success_url": "https://example.com/thank-you",
+  "status": "paid",
+  "order_id": "order-1234",
+  "description": "Order #1234 payment",
+  "price": 14844,
+  "fee": 0,
+  "auto_settle": false,
+  "fiat_value": 10.00,
+  "net_fiat_value": 10.00,
+  "currency": "USD",
+  "source_fiat_value": 10.00,
+  "address": "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh",
+  "hashed_order": "sha256-hmac-signature-here"
+}
