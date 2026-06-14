@@ -1,0 +1,116 @@
+name: OpenNode API FinOps Framework
+description: >
+  FinOps Framework FOCUS-aligned cost and usage considerations for the OpenNode
+  Bitcoin and Lightning Network payment processing API. OpenNode uses a transaction-
+  based pricing model with no monthly fee for standard merchants. Cost drivers are
+  primarily transaction volume, withdrawal method choice, and merchant classification.
+  Lightning Network operations are generally free, while on-demand on-chain withdrawals
+  carry a 1% fee.
+specificationVersion: '1.0'
+framework: FinOps Framework
+alignment: FOCUS 1.0
+url: https://opennode.com/pricing/
+provider: OpenNode
+costDrivers:
+  - name: Payment Processing Fees
+    description: >
+      OpenNode charges a per-transaction fee for Bitcoin payments processed through
+      the API. The exact percentage is not publicly disclosed on the pricing page
+      and varies by merchant classification (standard, high-risk, ISO/reseller).
+      High-risk merchants incur higher processing fees. Enterprise clients negotiate
+      custom rates.
+    category: Usage
+    unit: per-transaction
+    optimization: >
+      Negotiate volume discount pricing if processing high transaction counts.
+      Classify your business correctly to avoid high-risk merchant fees. Enterprise
+      clients should request custom rates based on projected monthly volume.
+
+  - name: On-Demand On-Chain Withdrawal Fee
+    description: >
+      On-demand on-chain Bitcoin withdrawals incur a 1% fee. Scheduled on-chain
+      withdrawals are free. Choosing scheduled over on-demand withdrawals for
+      non-urgent payouts eliminates this cost driver.
+    category: Usage
+    unit: per-withdrawal
+    fee: 1% of withdrawal amount
+    optimization: >
+      Prefer scheduled on-chain withdrawals over on-demand withdrawals for
+      non-time-sensitive payouts. Batch withdrawals to reduce the number of
+      on-chain transactions and associated fees.
+
+  - name: Lightning Network Operations
+    description: >
+      Lightning Network withdrawals and payments are free on OpenNode. Using the
+      Lightning Network for instant payments eliminates the 1% on-demand on-chain
+      fee and reduces Bitcoin network transaction fees that would otherwise apply
+      to on-chain transactions.
+    category: Usage
+    unit: per-transaction
+    fee: Free
+    optimization: >
+      Prioritize Lightning Network payments and withdrawals where possible to
+      minimize costs. Lightning also provides instant settlement, improving cash
+      flow compared to on-chain transactions.
+
+  - name: Currency Conversion
+    description: >
+      OpenNode offers automatic currency conversion at the time of payment, allowing
+      customers to pay in Bitcoin while merchants receive local currency. Conversion
+      is described as free to customers, though merchant settlement rates should
+      be confirmed with OpenNode as exchange rate spreads may apply.
+    category: Usage
+    optimization: >
+      Review exchange rate spreads applied during conversion when settling in local
+      currency vs. Bitcoin. If Bitcoin price appreciation is anticipated, consider
+      settling in Bitcoin to avoid conversion costs and capture upside.
+
+  - name: Integration Development Cost
+    description: >
+      Integrating the OpenNode REST API requires engineering time for authentication,
+      webhook handling, and error management. OpenNode provides official SDKs for
+      Node.js and PHP, with community libraries for Java, Elixir, Haskell, and Scala.
+      Development environment (testnet) is available at no cost.
+    category: Engineering
+    optimization: >
+      Use official Node.js or PHP SDKs to reduce integration time. Leverage the
+      testnet development environment to validate integration before incurring
+      production transaction fees. Use OpenNode's hosted checkout and pre-built
+      ecommerce plugins for Shopify, WooCommerce, Magento, and BigCommerce to
+      avoid custom integration overhead where possible.
+
+costAllocation:
+  - dimension: Withdrawal Method
+    description: Allocate costs by withdrawal method (on-demand on-chain vs. scheduled vs. Lightning) to identify optimization opportunities
+  - dimension: Merchant Classification
+    description: Track fee rates by merchant category to confirm correct classification and optimize for lower-cost tiers
+  - dimension: Environment
+    description: Separate development (testnet) and production usage; testnet operations do not incur real transaction fees
+  - dimension: Payment Channel
+    description: Separate on-chain vs. Lightning Network transaction volumes to measure Lightning adoption and cost savings
+
+budgeting:
+  - recommendation: >
+      Model transaction fee costs based on projected monthly payment volume and
+      average transaction size. Request OpenNode's current fee schedule to validate
+      projections before go-live.
+  - recommendation: >
+      Budget separately for on-demand on-chain withdrawal fees (1%) vs. scheduled
+      withdrawal costs (free). Forecast the proportion of payouts that require
+      on-demand timing.
+  - recommendation: >
+      Include Bitcoin network miner fees (independent of OpenNode fees) in cost
+      models for on-chain transactions, as these fluctuate with Bitcoin network
+      congestion.
+  - recommendation: >
+      Factor in engineering time for webhook infrastructure, error handling, and
+      idempotency logic as part of total cost of ownership for the integration.
+  - recommendation: >
+      Monitor status.opennode.com for platform uptime and factor potential downtime
+      into SLA planning for payment-critical workflows.
+
+contact:
+  website: https://opennode.com/
+  pricing: https://opennode.com/pricing/
+  status: https://status.opennode.com/
+  developers: https://developers.opennode.com

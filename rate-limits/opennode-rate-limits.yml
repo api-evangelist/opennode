@@ -1,0 +1,69 @@
+name: OpenNode API Rate Limits
+description: >
+  OpenNode does not publicly publish specific rate limit thresholds for its API.
+  All API requests must be made over HTTPS to https://api.opennode.com (production)
+  or https://app.dev.opennode.com (development/testnet). Authentication is required
+  on every request via an API key provided in the Authorization header. Unauthenticated
+  requests are rejected. API keys are scoped with three permission levels: Read,
+  Invoices, and Withdrawals. Contact OpenNode support for rate limit details specific
+  to your account or integration.
+specificationVersion: '0.1'
+url: https://developers.opennode.com/docs/authorization
+limits:
+  - name: API Request Rate Limit
+    description: >
+      OpenNode does not publicly disclose specific rate limit values. Requests
+      exceeding undisclosed thresholds may receive HTTP 429 Too Many Requests
+      responses. Implementations should include retry logic with exponential backoff
+      when handling 429 responses.
+    type: requests
+    period: not-publicly-disclosed
+    limit: contact-for-details
+    scope: per-api-key
+    enforcement: HTTP 429 Too Many Requests
+  - name: Authentication
+    description: >
+      All API requests require an API key passed in the Authorization header.
+      API keys are generated via the Integrations dashboard at app.opennode.com.
+      Separate API keys are required for development (testnet) and production
+      environments. Three permission tiers control access: Read (view charges and
+      withdrawals), Invoices (create and fetch charges), and Withdrawals (initiate
+      withdrawals).
+    type: authentication
+    header: Authorization
+    format: API_KEY_VALUE
+    environments:
+      - name: Production
+        baseURL: https://api.opennode.com
+        dashboard: https://app.opennode.com/developers/integrations
+      - name: Development
+        baseURL: https://app.dev.opennode.com
+        dashboard: https://app.dev.opennode.com
+    permissionLevels:
+      - level: Read
+        capabilities:
+          - View charges
+          - View withdrawals
+      - level: Invoices
+        capabilities:
+          - Create charges
+          - Fetch charge info
+          - View charges
+      - level: Withdrawals
+        capabilities:
+          - Initiate withdrawals
+          - View withdrawals
+  - name: HTTPS Requirement
+    description: >
+      All API calls must be made over HTTPS. Calls made over plain HTTP will fail.
+      This applies to both the production and development environments.
+    type: transport
+    required: true
+    enforcement: Request failure on plain HTTP
+notes:
+  - "Specific rate limit thresholds are not publicly documented by OpenNode"
+  - "Retry with exponential backoff is recommended when receiving HTTP 429 responses"
+  - "API keys for development (testnet) and production must be kept separate"
+  - "API keys are managed at https://app.opennode.com/developers/integrations"
+  - "Status page: https://status.opennode.com"
+  - "Support contact: https://opennode.com"

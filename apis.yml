@@ -1,0 +1,188 @@
+aid: api-evangelist-opennode
+name: OpenNode
+description: >
+  OpenNode is a Bitcoin and Lightning Network payment processor providing a REST API
+  for businesses and developers to accept Bitcoin payments, create payment charges,
+  manage Lightning Network invoices, process on-chain transactions, handle webhooks
+  for real-time payment notifications, initiate Bitcoin withdrawals and payouts, and
+  access payment analytics. The platform supports automatic currency conversion at
+  the time of payment, allowing merchants to settle in local currency or Bitcoin.
+  OpenNode serves ecommerce merchants, enterprise clients, and developers needing
+  Bitcoin payment infrastructure with pre-built integrations for Shopify, WooCommerce,
+  Magento, and BigCommerce.
+type: Index
+image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+url: https://raw.githubusercontent.com/api-evangelist/opennode/refs/heads/main/apis.yml
+created: '2026-06-13'
+modified: '2026-06-13'
+specificationVersion: '0.19'
+tags:
+  - Bitcoin
+  - Lightning Network
+  - Payments
+  - Payment Processing
+  - Cryptocurrency
+  - Fintech
+  - Webhooks
+  - Invoicing
+  - Payouts
+  - LNURL
+apis:
+  - name: OpenNode Charges API
+    description: >
+      REST API for creating and managing Bitcoin payment charges. Supports both
+      on-chain Bitcoin and Lightning Network BOLT11 invoices. Merchants create a
+      charge with an amount and currency, and OpenNode returns a Lightning invoice
+      and on-chain address for the customer to pay. Webhooks notify the merchant
+      upon payment confirmation. Authentication uses an API key in the Authorization
+      header.
+    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    humanURL: https://developers.opennode.com/docs/creating-a-charge
+    baseURL: https://api.opennode.com
+    tags:
+      - Bitcoin
+      - Lightning Network
+      - Charges
+      - Invoices
+      - Payments
+    properties:
+      - type: Documentation
+        url: https://developers.opennode.com/docs/creating-a-charge
+      - type: APIReference
+        url: https://developers.opennode.com/reference
+  - name: OpenNode Withdrawals API
+    description: >
+      REST API for initiating Bitcoin withdrawals and payouts to on-chain addresses
+      or Lightning Network invoices. Enables businesses to pay contractors, execute
+      payroll, or send payouts to users. Supports LNURL withdrawals for streamlined
+      Lightning payouts. Scheduled and on-demand withdrawal options are available
+      with varying fee structures.
+    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    humanURL: https://developers.opennode.com/reference
+    baseURL: https://api.opennode.com
+    tags:
+      - Bitcoin
+      - Lightning Network
+      - Withdrawals
+      - Payouts
+      - LNURL
+    properties:
+      - type: Documentation
+        url: https://developers.opennode.com/reference
+  - name: OpenNode Refunds API
+    description: >
+      REST API for creating and managing Bitcoin payment refunds. Allows merchants
+      to issue full or partial refunds for charges back to the original payer's
+      Bitcoin or Lightning address. Supports listing and retrieving individual
+      refund records.
+    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    humanURL: https://developers.opennode.com/reference
+    baseURL: https://api.opennode.com
+    tags:
+      - Bitcoin
+      - Refunds
+      - Payments
+    properties:
+      - type: Documentation
+        url: https://developers.opennode.com/reference
+  - name: OpenNode Exchanges API
+    description: >
+      REST API for initiating Bitcoin exchange operations, enabling merchants to
+      convert between Bitcoin and local currencies. Supports automatic conversion
+      at the time of payment with exchange rates locked at the moment of transaction
+      initiation.
+    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    humanURL: https://developers.opennode.com/reference
+    baseURL: https://api.opennode.com
+    tags:
+      - Bitcoin
+      - Currency Exchange
+      - Conversion
+    properties:
+      - type: Documentation
+        url: https://developers.opennode.com/reference
+  - name: OpenNode Account API
+    description: >
+      REST API for retrieving account balance, transaction activity, and managing
+      scheduled bank withdrawals. Provides a unified view of Bitcoin holdings, fiat
+      settlements, and transaction history for the authenticated merchant account.
+    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    humanURL: https://developers.opennode.com/reference
+    baseURL: https://api.opennode.com
+    tags:
+      - Account
+      - Balance
+      - Activity
+      - Analytics
+    properties:
+      - type: Documentation
+        url: https://developers.opennode.com/reference
+  - name: OpenNode Static Addresses API
+    description: >
+      REST API for creating and managing static on-chain Bitcoin addresses and
+      static Lightning Network addresses via LNURL-Pay. Static addresses allow
+      merchants to accept Bitcoin payments at a fixed address or Lightning address
+      without creating a new invoice per transaction, suitable for donation pages
+      and recurring payment scenarios.
+    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    humanURL: https://developers.opennode.com/reference
+    baseURL: https://api.opennode.com
+    tags:
+      - Bitcoin
+      - Static Addresses
+      - LNURL-Pay
+      - Lightning Network
+    properties:
+      - type: Documentation
+        url: https://developers.opennode.com/reference
+  - name: OpenNode Rates and Currencies API
+    description: >
+      REST API for retrieving real-time Bitcoin exchange rates across supported
+      fiat currencies and listing all currencies supported by the OpenNode platform.
+      Useful for displaying prices in local currency, calculating settlement amounts,
+      and building multi-currency checkout experiences.
+    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    humanURL: https://developers.opennode.com/reference
+    baseURL: https://api.opennode.com
+    tags:
+      - Bitcoin
+      - Exchange Rates
+      - Currencies
+      - Pricing
+    properties:
+      - type: Documentation
+        url: https://developers.opennode.com/reference
+common:
+  - type: Website
+    url: https://opennode.com/
+  - type: Documentation
+    url: https://developers.opennode.com
+  - type: APIReference
+    url: https://developers.opennode.com/reference
+  - type: GettingStarted
+    url: https://developers.opennode.com/docs/getting-started
+  - type: Authentication
+    url: https://developers.opennode.com/docs/authorization
+  - type: Webhooks
+    url: https://developers.opennode.com/docs/webhooks
+  - type: StatusPage
+    url: https://status.opennode.com/
+  - type: Pricing
+    url: https://opennode.com/pricing/
+  - type: Blog
+    url: https://blog.opennode.com/blog/
+  - type: LinkedIn
+    url: https://www.linkedin.com/company/opennode/
+  - type: X
+    url: https://x.com/OpenNode
+  - type: GitHub
+    url: https://github.com/opennode
+  - type: Plans
+    url: plans/opennode-plans-pricing.yml
+  - type: RateLimits
+    url: rate-limits/opennode-rate-limits.yml
+  - type: FinOps
+    url: finops/opennode-finops.yml
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

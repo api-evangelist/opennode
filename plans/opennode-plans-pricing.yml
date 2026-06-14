@@ -1,0 +1,76 @@
+name: OpenNode API Plans and Pricing
+description: >
+  OpenNode charges transaction-based fees for Bitcoin payment processing with no
+  monthly subscription fee for standard merchants. Pricing is based on transaction
+  volume and merchant classification. Lightning Network withdrawals are free, while
+  on-demand on-chain withdrawals carry a 1% fee. Scheduled on-chain withdrawals and
+  scheduled bank transfers are free. Enterprise and high-volume merchants should
+  contact OpenNode for volume discount pricing. High-risk merchants may be subject
+  to higher processing fees.
+specificationVersion: '0.1'
+url: https://opennode.com/pricing/
+plans:
+  - name: Standard Merchant
+    description: >
+      Default plan for merchants accepting Bitcoin payments via the OpenNode API.
+      Includes access to all API endpoints for creating charges, managing withdrawals,
+      issuing refunds, and receiving webhooks. Transaction fees apply per payment
+      processed. No monthly subscription fee required.
+    url: https://opennode.com/pricing/
+    pricing: Transaction fee (contact for current rate)
+    pricingModel: per-transaction
+    features:
+      - On-chain Bitcoin payments
+      - Lightning Network instant payments
+      - Automatic currency conversion
+      - Webhook notifications
+      - Hosted checkout pages
+      - Payment buttons
+      - Refund management
+      - API key authentication
+      - Development sandbox (testnet)
+      - eCommerce platform integrations
+  - name: ISO and Reseller
+    description: >
+      Volume-based pricing plan for independent sales organizations and resellers
+      integrating OpenNode payments into their platforms or offering white-label
+      Bitcoin payment services to their own merchant networks. Includes volume
+      discounts and strategic partnership benefits.
+    url: https://opennode.com/pricing/
+    pricing: Volume discounts available — contact for pricing
+    pricingModel: volume
+    features:
+      - All Standard Merchant features
+      - Volume discount pricing
+      - White-label integration support
+      - Strategic partnership benefits
+      - Dedicated account management
+  - name: Enterprise
+    description: >
+      Custom enterprise plan for high-volume merchants, large platforms, and
+      businesses with specialized payment infrastructure requirements. Includes
+      custom fee structures, dedicated support, SLA agreements, and tailored
+      integration assistance.
+    url: https://opennode.com/pricing/
+    pricing: Custom — contact OpenNode sales
+    pricingModel: custom
+    contact: https://opennode.com/
+    features:
+      - All Standard Merchant features
+      - Custom transaction fee rates
+      - Dedicated integration support
+      - SLA agreements
+      - Priority support
+      - Custom withdrawal schedules
+      - Multi-signature wallet support
+withdrawalFees:
+  - type: Scheduled on-chain withdrawal
+    fee: Free
+  - type: On-demand on-chain withdrawal
+    fee: 1%
+  - type: Lightning Network withdrawal
+    fee: Free
+  - type: Scheduled bank transfer
+    fee: Varies by currency
+  - type: Currency conversion
+    fee: Free to customers (merchant rate may apply)
