@@ -11,7 +11,7 @@ description: >
   Bitcoin payment infrastructure with pre-built integrations for Shopify, WooCommerce,
   Magento, and BigCommerce.
 type: Index
-image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
 url: https://raw.githubusercontent.com/api-evangelist/opennode/refs/heads/main/apis.yml
 created: '2026-06-13'
 modified: '2026-06-13'
@@ -36,7 +36,7 @@ apis:
       and on-chain address for the customer to pay. Webhooks notify the merchant
       upon payment confirmation. Authentication uses an API key in the Authorization
       header.
-    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
     humanURL: https://developers.opennode.com/docs/creating-a-charge
     baseURL: https://api.opennode.com
     tags:
@@ -57,7 +57,7 @@ apis:
       payroll, or send payouts to users. Supports LNURL withdrawals for streamlined
       Lightning payouts. Scheduled and on-demand withdrawal options are available
       with varying fee structures.
-    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
     humanURL: https://developers.opennode.com/reference
     baseURL: https://api.opennode.com
     tags:
@@ -75,7 +75,7 @@ apis:
       to issue full or partial refunds for charges back to the original payer's
       Bitcoin or Lightning address. Supports listing and retrieving individual
       refund records.
-    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
     humanURL: https://developers.opennode.com/reference
     baseURL: https://api.opennode.com
     tags:
@@ -91,7 +91,7 @@ apis:
       convert between Bitcoin and local currencies. Supports automatic conversion
       at the time of payment with exchange rates locked at the moment of transaction
       initiation.
-    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
     humanURL: https://developers.opennode.com/reference
     baseURL: https://api.opennode.com
     tags:
@@ -106,7 +106,7 @@ apis:
       REST API for retrieving account balance, transaction activity, and managing
       scheduled bank withdrawals. Provides a unified view of Bitcoin holdings, fiat
       settlements, and transaction history for the authenticated merchant account.
-    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
     humanURL: https://developers.opennode.com/reference
     baseURL: https://api.opennode.com
     tags:
@@ -124,7 +124,7 @@ apis:
       merchants to accept Bitcoin payments at a fixed address or Lightning address
       without creating a new invoice per transaction, suitable for donation pages
       and recurring payment scenarios.
-    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
     humanURL: https://developers.opennode.com/reference
     baseURL: https://api.opennode.com
     tags:
@@ -141,7 +141,7 @@ apis:
       fiat currencies and listing all currencies supported by the OpenNode platform.
       Useful for displaying prices in local currency, calculating settlement amounts,
       and building multi-currency checkout experiences.
-    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
     humanURL: https://developers.opennode.com/reference
     baseURL: https://api.opennode.com
     tags:
