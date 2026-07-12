@@ -153,6 +153,10 @@ apis:
       - type: Documentation
         url: https://developers.opennode.com/reference
 common:
+  - type: DomainSecurity
+    url: security/opennode-domain-security.yml
+  - type: Authentication
+    url: authentication/opennode-authentication.yml
   - type: Website
     url: https://opennode.com/
   - type: Documentation
