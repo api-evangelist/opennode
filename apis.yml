@@ -153,6 +153,8 @@ apis:
       - type: Documentation
         url: https://developers.opennode.com/reference
 common:
+  - type: AgenticAccess
+    url: agentic-access/opennode-agentic-access.yml
   - type: DomainSecurity
     url: security/opennode-domain-security.yml
   - type: Authentication
