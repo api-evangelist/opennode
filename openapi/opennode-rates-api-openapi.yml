@@ -1,0 +1,103 @@
+openapi: 3.1.0
+info:
+  title: OpenNode Account Rates API
+  description: 'OpenNode is a Bitcoin and Lightning Network payment processor providing a REST API for businesses and developers to accept Bitcoin payments, create payment charges, manage Lightning Network invoices, process on-chain transactions, handle webhooks for real-time payment notifications, initiate Bitcoin withdrawals and payouts, and access payment analytics. The platform supports automatic currency conversion at the time of payment, allowing merchants to settle in local currency or Bitcoin.
+
+    '
+  version: 1.0.0
+  termsOfService: https://opennode.com/terms/
+  contact:
+    name: OpenNode Support
+    url: https://opennode.com/
+  license:
+    name: Proprietary
+servers:
+- url: https://api.opennode.com
+  description: Production server
+- url: https://app.dev.opennode.com
+  description: Development/sandbox server
+security:
+- ApiKeyAuth: []
+tags:
+- name: Rates
+  description: Bitcoin exchange rates and supported currencies
+paths:
+  /v1/rates:
+    get:
+      operationId: getExchangeRates
+      summary: Get Bitcoin exchange rates
+      description: Returns real-time Bitcoin exchange rates across all supported fiat currencies.
+      tags:
+      - Rates
+      responses:
+        '200':
+          description: Exchange rates
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExchangeRatesResponse'
+  /v1/currencies:
+    get:
+      operationId: getSupportedCurrencies
+      summary: List supported currencies
+      description: Returns all currencies supported by the OpenNode platform for payment conversion.
+      tags:
+      - Rates
+      responses:
+        '200':
+          description: Supported currencies
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CurrenciesResponse'
+components:
+  schemas:
+    CurrenciesResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              code:
+                type: string
+                description: ISO 4217 currency code.
+                example: USD
+              name:
+                type: string
+                description: Full currency name.
+                example: United States Dollar
+              symbol:
+                type: string
+                description: Currency symbol.
+                example: $
+    ExchangeRatesResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          additionalProperties:
+            type: object
+            properties:
+              BTC:
+                type: number
+                description: BTC equivalent value for the currency.
+              EUR:
+                type: number
+              SATS:
+                type: number
+          description: Map of currency codes to their exchange rates.
+          example:
+            USD:
+              BTC: 1.48e-05
+              EUR: 0.91
+              SATS: 1484
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'API key obtained from the OpenNode dashboard. Pass the key directly in the Authorization header (no "Bearer" prefix required).
+
+        '

@@ -1,0 +1,301 @@
+openapi: 3.1.0
+info:
+  title: OpenNode Account Charges API
+  description: 'OpenNode is a Bitcoin and Lightning Network payment processor providing a REST API for businesses and developers to accept Bitcoin payments, create payment charges, manage Lightning Network invoices, process on-chain transactions, handle webhooks for real-time payment notifications, initiate Bitcoin withdrawals and payouts, and access payment analytics. The platform supports automatic currency conversion at the time of payment, allowing merchants to settle in local currency or Bitcoin.
+
+    '
+  version: 1.0.0
+  termsOfService: https://opennode.com/terms/
+  contact:
+    name: OpenNode Support
+    url: https://opennode.com/
+  license:
+    name: Proprietary
+servers:
+- url: https://api.opennode.com
+  description: Production server
+- url: https://app.dev.opennode.com
+  description: Development/sandbox server
+security:
+- ApiKeyAuth: []
+tags:
+- name: Charges
+  description: Create and manage Bitcoin payment charges
+paths:
+  /v1/charges:
+    post:
+      operationId: createCharge
+      summary: Create a charge
+      description: 'Creates a new Bitcoin payment charge. Returns a Lightning Network BOLT11 invoice and an on-chain Bitcoin address for the customer to pay. Webhooks notify the merchant upon payment confirmation.
+
+        '
+      tags:
+      - Charges
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateChargeRequest'
+            example:
+              amount: 10000
+              currency: USD
+              description: Order
+              customer_name: Jane Doe
+              customer_email: jane@example.com
+              order_id: order-1234
+              callback_url: https://example.com/webhooks/opennode
+              success_url: https://example.com/thank-you
+              auto_settle: false
+              ttl: 1440
+      responses:
+        '200':
+          description: Charge successfully created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChargeResponse'
+        '400':
+          description: Bad request — invalid parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized — missing or invalid API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    get:
+      operationId: listCharges
+      summary: List charges
+      description: Returns a list of all charges for the authenticated merchant account.
+      tags:
+      - Charges
+      parameters:
+      - name: page
+        in: query
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+        description: Page number for pagination
+      - name: search_after
+        in: query
+        schema:
+          type: string
+        description: Cursor-based pagination — ID of the last record on the previous page
+      responses:
+        '200':
+          description: List of charges
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChargeListResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v1/charge/{id}:
+    get:
+      operationId: getCharge
+      summary: Get a charge
+      description: Retrieves the details of an existing charge by its ID.
+      tags:
+      - Charges
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Unique charge identifier
+      responses:
+        '200':
+          description: Charge details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChargeResponse'
+        '404':
+          description: Charge not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    ChargeListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Charge'
+    ChargeResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Charge'
+    LightningInvoice:
+      type: object
+      properties:
+        expires_at:
+          type: integer
+          format: int64
+          description: Unix timestamp when the Lightning invoice expires.
+        payreq:
+          type: string
+          description: BOLT11 Lightning payment request string.
+    ChainInvoice:
+      type: object
+      properties:
+        address:
+          type: string
+          description: On-chain Bitcoin address.
+        settled_at:
+          type: integer
+          format: int64
+          description: Unix timestamp when the on-chain payment was settled.
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Human-readable error message.
+          example: Invalid API key
+        code:
+          type: integer
+          description: Error code.
+          example: 401
+    CreateChargeRequest:
+      type: object
+      required:
+      - amount
+      properties:
+        amount:
+          type: integer
+          format: int32
+          description: Amount to collect. Default currency is satoshis unless `currency` is specified.
+          example: 10000
+        currency:
+          type: string
+          description: Three-letter ISO 4217 currency code (uppercase). When provided, `amount` is interpreted in this fiat currency.
+          example: USD
+          pattern: ^[A-Z]{3}$
+        description:
+          type: string
+          description: Payment description displayed in the payer's wallet.
+          example: Order
+        customer_name:
+          type: string
+          description: Name of the payer.
+          example: Jane Doe
+        customer_email:
+          type: string
+          format: email
+          description: Email address of the payer.
+          example: jane@example.com
+        order_id:
+          type: string
+          description: Merchant internal reference identifier for the order.
+          example: order-1234
+        callback_url:
+          type: string
+          format: uri
+          description: Webhook endpoint URL that receives payment status update notifications.
+          example: https://example.com/webhooks/opennode
+        success_url:
+          type: string
+          format: uri
+          description: URL to redirect the customer after successful payment.
+          example: https://example.com/thank-you
+        auto_settle:
+          type: boolean
+          description: When true, automatically converts the payment to fiat currency. Requires bank account setup.
+          default: false
+        split_to_btc_bps:
+          type: integer
+          format: int32
+          description: Percentage of payment to retain in Bitcoin, expressed in basis points (100 bps = 1%).
+          minimum: 0
+          maximum: 10000
+        ttl:
+          type: integer
+          format: int32
+          description: Time-to-live for the invoice in minutes. Min 10, max 4320 (72 hours). Default 1440 (24 hours).
+          minimum: 10
+          maximum: 4320
+          default: 1440
+        notify_receiver:
+          type: boolean
+          description: When true, sends an email notification to the payer upon payment confirmation.
+          default: false
+    Charge:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique charge identifier.
+          example: ch_abc123def456
+        description:
+          type: string
+          description: Payment description.
+        amount:
+          type: integer
+          description: Charge amount in satoshis.
+        status:
+          type: string
+          enum:
+          - unpaid
+          - processing
+          - paid
+          - expired
+          description: Current payment status of the charge.
+        fiat_value:
+          type: number
+          format: float
+          description: Fiat value of the charge at time of creation.
+        currency:
+          type: string
+          description: ISO 4217 fiat currency code.
+        source_fiat_value:
+          type: number
+          format: float
+          description: Source fiat value used for conversion.
+        lightning_invoice:
+          $ref: '#/components/schemas/LightningInvoice'
+        chain_invoice:
+          $ref: '#/components/schemas/ChainInvoice'
+        address:
+          type: string
+          description: On-chain Bitcoin address for payment.
+        created_at:
+          type: integer
+          format: int64
+          description: Unix timestamp of charge creation.
+        order_id:
+          type: string
+          description: Merchant order reference.
+        callback_url:
+          type: string
+          format: uri
+          description: Webhook callback URL.
+        success_url:
+          type: string
+          format: uri
+          description: Post-payment redirect URL.
+        auto_settle:
+          type: boolean
+          description: Whether fiat auto-settlement is enabled.
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'API key obtained from the OpenNode dashboard. Pass the key directly in the Authorization header (no "Bearer" prefix required).
+
+        '

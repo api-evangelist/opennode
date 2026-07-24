@@ -1,0 +1,200 @@
+openapi: 3.1.0
+info:
+  title: OpenNode Account Withdrawals API
+  description: 'OpenNode is a Bitcoin and Lightning Network payment processor providing a REST API for businesses and developers to accept Bitcoin payments, create payment charges, manage Lightning Network invoices, process on-chain transactions, handle webhooks for real-time payment notifications, initiate Bitcoin withdrawals and payouts, and access payment analytics. The platform supports automatic currency conversion at the time of payment, allowing merchants to settle in local currency or Bitcoin.
+
+    '
+  version: 1.0.0
+  termsOfService: https://opennode.com/terms/
+  contact:
+    name: OpenNode Support
+    url: https://opennode.com/
+  license:
+    name: Proprietary
+servers:
+- url: https://api.opennode.com
+  description: Production server
+- url: https://app.dev.opennode.com
+  description: Development/sandbox server
+security:
+- ApiKeyAuth: []
+tags:
+- name: Withdrawals
+  description: Initiate Bitcoin withdrawals and payouts
+paths:
+  /v2/withdrawals:
+    post:
+      operationId: initiateWithdrawal
+      summary: Initiate a withdrawal
+      description: 'Initiates a Bitcoin withdrawal to an on-chain address or pays a Lightning Network invoice. Supports LNURL withdrawals for streamlined Lightning payouts.
+
+        '
+      tags:
+      - Withdrawals
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WithdrawalRequest'
+            example:
+              type: ln
+              amount: 5000
+              address: lnbc50u1p3zqvppsp...
+              callback_url: https://example.com/webhooks/withdrawal
+      responses:
+        '200':
+          description: Withdrawal successfully initiated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WithdrawalResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    get:
+      operationId: listWithdrawals
+      summary: List withdrawals
+      description: Returns a list of all withdrawals for the authenticated merchant account.
+      tags:
+      - Withdrawals
+      responses:
+        '200':
+          description: List of withdrawals
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WithdrawalListResponse'
+  /v2/withdrawal/{id}:
+    get:
+      operationId: getWithdrawal
+      summary: Get a withdrawal
+      description: Retrieves the details of an existing withdrawal by its ID.
+      tags:
+      - Withdrawals
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Unique withdrawal identifier
+      responses:
+        '200':
+          description: Withdrawal details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WithdrawalResponse'
+        '404':
+          description: Withdrawal not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    WithdrawalResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Withdrawal'
+    Withdrawal:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique withdrawal identifier.
+        type:
+          type: string
+          enum:
+          - chain
+          - ln
+          description: Withdrawal type.
+        amount:
+          type: integer
+          description: Withdrawal amount in satoshis.
+        status:
+          type: string
+          enum:
+          - pending
+          - processing
+          - confirmed
+          - failed
+          description: Current status of the withdrawal.
+        address:
+          type: string
+          description: Destination address.
+        fee:
+          type: integer
+          description: Network fee in satoshis.
+        created_at:
+          type: integer
+          format: int64
+          description: Unix timestamp of withdrawal creation.
+        processed_at:
+          type: integer
+          format: int64
+          description: Unix timestamp when the withdrawal was processed.
+    WithdrawalListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Withdrawal'
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Human-readable error message.
+          example: Invalid API key
+        code:
+          type: integer
+          description: Error code.
+          example: 401
+    WithdrawalRequest:
+      type: object
+      required:
+      - type
+      - amount
+      - address
+      properties:
+        type:
+          type: string
+          enum:
+          - chain
+          - ln
+          description: Withdrawal type — `chain` for on-chain Bitcoin, `ln` for Lightning Network.
+          example: ln
+        amount:
+          type: integer
+          format: int32
+          description: Withdrawal amount in satoshis.
+          example: 5000
+        address:
+          type: string
+          description: Destination Bitcoin address (on-chain) or BOLT11 Lightning invoice (ln).
+          example: lnbc50u1p3zqvpp...
+        callback_url:
+          type: string
+          format: uri
+          description: Webhook endpoint for withdrawal status notifications.
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'API key obtained from the OpenNode dashboard. Pass the key directly in the Authorization header (no "Bearer" prefix required).
+
+        '

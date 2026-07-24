@@ -1,0 +1,139 @@
+openapi: 3.1.0
+info:
+  title: OpenNode Account Static Addresses API
+  description: 'OpenNode is a Bitcoin and Lightning Network payment processor providing a REST API for businesses and developers to accept Bitcoin payments, create payment charges, manage Lightning Network invoices, process on-chain transactions, handle webhooks for real-time payment notifications, initiate Bitcoin withdrawals and payouts, and access payment analytics. The platform supports automatic currency conversion at the time of payment, allowing merchants to settle in local currency or Bitcoin.
+
+    '
+  version: 1.0.0
+  termsOfService: https://opennode.com/terms/
+  contact:
+    name: OpenNode Support
+    url: https://opennode.com/
+  license:
+    name: Proprietary
+servers:
+- url: https://api.opennode.com
+  description: Production server
+- url: https://app.dev.opennode.com
+  description: Development/sandbox server
+security:
+- ApiKeyAuth: []
+tags:
+- name: Static Addresses
+  description: Static on-chain and Lightning Network addresses
+paths:
+  /v1/static-addresses:
+    post:
+      operationId: createStaticAddress
+      summary: Create a static address
+      description: 'Creates a static on-chain Bitcoin address or a static Lightning Network address via LNURL-Pay. Suitable for donation pages and recurring payment scenarios.
+
+        '
+      tags:
+      - Static Addresses
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StaticAddressRequest'
+      responses:
+        '200':
+          description: Static address created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StaticAddressResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    get:
+      operationId: listStaticAddresses
+      summary: List static addresses
+      description: Returns all static addresses for the authenticated merchant account.
+      tags:
+      - Static Addresses
+      responses:
+        '200':
+          description: List of static addresses
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StaticAddressListResponse'
+components:
+  schemas:
+    StaticAddress:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique static address identifier.
+        address:
+          type: string
+          description: On-chain Bitcoin address or Lightning address.
+        type:
+          type: string
+          enum:
+          - chain
+          - lnurl
+          description: Address type.
+        lnurl:
+          type: string
+          description: LNURL-Pay encoded string for Lightning static addresses.
+        description:
+          type: string
+          description: Description shown to payers.
+        created_at:
+          type: integer
+          format: int64
+          description: Unix timestamp of address creation.
+    StaticAddressListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/StaticAddress'
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Human-readable error message.
+          example: Invalid API key
+        code:
+          type: integer
+          description: Error code.
+          example: 401
+    StaticAddressRequest:
+      type: object
+      properties:
+        description:
+          type: string
+          description: Description for the static address, displayed to payers.
+        min_amount:
+          type: integer
+          description: Minimum payment amount in satoshis (for LNURL-Pay).
+        max_amount:
+          type: integer
+          description: Maximum payment amount in satoshis (for LNURL-Pay).
+        callback_url:
+          type: string
+          format: uri
+          description: Webhook endpoint for payment notifications.
+    StaticAddressResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/StaticAddress'
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'API key obtained from the OpenNode dashboard. Pass the key directly in the Authorization header (no "Bearer" prefix required).
+
+        '

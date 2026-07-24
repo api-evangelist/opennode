@@ -1,0 +1,94 @@
+openapi: 3.1.0
+info:
+  title: OpenNode Account API
+  description: 'OpenNode is a Bitcoin and Lightning Network payment processor providing a REST API for businesses and developers to accept Bitcoin payments, create payment charges, manage Lightning Network invoices, process on-chain transactions, handle webhooks for real-time payment notifications, initiate Bitcoin withdrawals and payouts, and access payment analytics. The platform supports automatic currency conversion at the time of payment, allowing merchants to settle in local currency or Bitcoin.
+
+    '
+  version: 1.0.0
+  termsOfService: https://opennode.com/terms/
+  contact:
+    name: OpenNode Support
+    url: https://opennode.com/
+  license:
+    name: Proprietary
+servers:
+- url: https://api.opennode.com
+  description: Production server
+- url: https://app.dev.opennode.com
+  description: Development/sandbox server
+security:
+- ApiKeyAuth: []
+tags:
+- name: Account
+  description: Account balance and transaction activity
+paths:
+  /v1/account/balance:
+    get:
+      operationId: getAccountBalance
+      summary: Get account balance
+      description: Retrieves the current balance for the authenticated merchant account, including Bitcoin and fiat holdings.
+      tags:
+      - Account
+      responses:
+        '200':
+          description: Account balance
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountBalanceResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    AccountBalanceResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            balance:
+              $ref: '#/components/schemas/Balance'
+    Balance:
+      type: object
+      properties:
+        BTC:
+          type: object
+          properties:
+            balance:
+              type: number
+              description: Available Bitcoin balance in satoshis.
+            pending_balance:
+              type: number
+              description: Pending Bitcoin balance in satoshis.
+        USD:
+          type: object
+          properties:
+            balance:
+              type: number
+              description: Available fiat balance (example in USD).
+            pending_balance:
+              type: number
+              description: Pending fiat balance.
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Human-readable error message.
+          example: Invalid API key
+        code:
+          type: integer
+          description: Error code.
+          example: 401
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'API key obtained from the OpenNode dashboard. Pass the key directly in the Authorization header (no "Bearer" prefix required).
+
+        '

@@ -1,0 +1,186 @@
+openapi: 3.1.0
+info:
+  title: OpenNode Account Refunds API
+  description: 'OpenNode is a Bitcoin and Lightning Network payment processor providing a REST API for businesses and developers to accept Bitcoin payments, create payment charges, manage Lightning Network invoices, process on-chain transactions, handle webhooks for real-time payment notifications, initiate Bitcoin withdrawals and payouts, and access payment analytics. The platform supports automatic currency conversion at the time of payment, allowing merchants to settle in local currency or Bitcoin.
+
+    '
+  version: 1.0.0
+  termsOfService: https://opennode.com/terms/
+  contact:
+    name: OpenNode Support
+    url: https://opennode.com/
+  license:
+    name: Proprietary
+servers:
+- url: https://api.opennode.com
+  description: Production server
+- url: https://app.dev.opennode.com
+  description: Development/sandbox server
+security:
+- ApiKeyAuth: []
+tags:
+- name: Refunds
+  description: Create and manage payment refunds
+paths:
+  /v1/refunds:
+    post:
+      operationId: createRefund
+      summary: Create a refund
+      description: 'Issues a full or partial refund for a charge back to the original payer''s Bitcoin or Lightning address.
+
+        '
+      tags:
+      - Refunds
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefundRequest'
+            example:
+              checkout_id: ch_abc123
+              amount: 10000
+              address: bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh
+              email: customer@example.com
+      responses:
+        '200':
+          description: Refund successfully created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RefundResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    get:
+      operationId: listRefunds
+      summary: List refunds
+      description: Returns a list of all refunds for the authenticated merchant account.
+      tags:
+      - Refunds
+      responses:
+        '200':
+          description: List of refunds
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RefundListResponse'
+  /v1/refund/{id}:
+    get:
+      operationId: getRefund
+      summary: Get a refund
+      description: Retrieves the details of a specific refund by its ID.
+      tags:
+      - Refunds
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Unique refund identifier
+      responses:
+        '200':
+          description: Refund details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RefundResponse'
+        '404':
+          description: Refund not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    RefundListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Refund'
+    RefundResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Refund'
+    Refund:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique refund identifier.
+        checkout_id:
+          type: string
+          description: ID of the original charge.
+        amount:
+          type: integer
+          description: Refund amount in satoshis.
+        status:
+          type: string
+          enum:
+          - pending
+          - processing
+          - confirmed
+          - failed
+          description: Current status of the refund.
+        address:
+          type: string
+          description: Destination Bitcoin address for the refund.
+        email:
+          type: string
+          format: email
+          description: Customer email for the refund.
+        created_at:
+          type: integer
+          format: int64
+          description: Unix timestamp of refund creation.
+    RefundRequest:
+      type: object
+      required:
+      - checkout_id
+      - address
+      - email
+      properties:
+        checkout_id:
+          type: string
+          description: ID of the original charge to refund.
+          example: ch_abc123
+        amount:
+          type: integer
+          format: int32
+          description: Refund amount in satoshis. If omitted, the full charge amount is refunded.
+          example: 10000
+        address:
+          type: string
+          description: Bitcoin or Lightning address to send the refund to.
+          example: bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh
+        email:
+          type: string
+          format: email
+          description: Email address of the customer receiving the refund.
+          example: customer@example.com
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Human-readable error message.
+          example: Invalid API key
+        code:
+          type: integer
+          description: Error code.
+          example: 401
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'API key obtained from the OpenNode dashboard. Pass the key directly in the Authorization header (no "Bearer" prefix required).
+
+        '
