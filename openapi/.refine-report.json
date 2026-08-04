@@ -1,0 +1,24 @@
+{
+  "provider": "opennode",
+  "sources": [
+    "opennode-account-api-openapi.yml",
+    "opennode-charges-api-openapi.yml",
+    "opennode-rates-api-openapi.yml",
+    "opennode-refunds-api-openapi.yml",
+    "opennode-static-addresses-api-openapi.yml",
+    "opennode-withdrawals-api-openapi.yml"
+  ],
+  "outputs": [
+    "opennode-account-api-openapi.yml",
+    "opennode-charges-api-openapi.yml",
+    "opennode-rates-api-openapi.yml",
+    "opennode-refunds-api-openapi.yml",
+    "opennode-static-addresses-api-openapi.yml",
+    "opennode-withdrawals-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}

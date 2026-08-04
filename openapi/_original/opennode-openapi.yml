@@ -1,0 +1,824 @@
+openapi: 3.1.0
+info:
+  title: OpenNode API
+  description: >
+    OpenNode is a Bitcoin and Lightning Network payment processor providing a REST API
+    for businesses and developers to accept Bitcoin payments, create payment charges,
+    manage Lightning Network invoices, process on-chain transactions, handle webhooks
+    for real-time payment notifications, initiate Bitcoin withdrawals and payouts, and
+    access payment analytics. The platform supports automatic currency conversion at
+    the time of payment, allowing merchants to settle in local currency or Bitcoin.
+  version: '1.0.0'
+  termsOfService: https://opennode.com/terms/
+  contact:
+    name: OpenNode Support
+    url: https://opennode.com/
+  license:
+    name: Proprietary
+servers:
+  - url: https://api.opennode.com
+    description: Production server
+  - url: https://app.dev.opennode.com
+    description: Development/sandbox server
+security:
+  - ApiKeyAuth: []
+tags:
+  - name: Charges
+    description: Create and manage Bitcoin payment charges
+  - name: Withdrawals
+    description: Initiate Bitcoin withdrawals and payouts
+  - name: Refunds
+    description: Create and manage payment refunds
+  - name: Account
+    description: Account balance and transaction activity
+  - name: Rates
+    description: Bitcoin exchange rates and supported currencies
+  - name: Static Addresses
+    description: Static on-chain and Lightning Network addresses
+paths:
+  /v1/charges:
+    post:
+      operationId: createCharge
+      summary: Create a charge
+      description: >
+        Creates a new Bitcoin payment charge. Returns a Lightning Network BOLT11 invoice
+        and an on-chain Bitcoin address for the customer to pay. Webhooks notify the
+        merchant upon payment confirmation.
+      tags:
+        - Charges
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateChargeRequest'
+            example:
+              amount: 10000
+              currency: USD
+              description: Order #1234 payment
+              customer_name: Jane Doe
+              customer_email: jane@example.com
+              order_id: order-1234
+              callback_url: https://example.com/webhooks/opennode
+              success_url: https://example.com/thank-you
+              auto_settle: false
+              ttl: 1440
+      responses:
+        '200':
+          description: Charge successfully created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChargeResponse'
+        '400':
+          description: Bad request — invalid parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized — missing or invalid API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    get:
+      operationId: listCharges
+      summary: List charges
+      description: Returns a list of all charges for the authenticated merchant account.
+      tags:
+        - Charges
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+          description: Page number for pagination
+        - name: search_after
+          in: query
+          schema:
+            type: string
+          description: Cursor-based pagination — ID of the last record on the previous page
+      responses:
+        '200':
+          description: List of charges
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChargeListResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v1/charge/{id}:
+    get:
+      operationId: getCharge
+      summary: Get a charge
+      description: Retrieves the details of an existing charge by its ID.
+      tags:
+        - Charges
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Unique charge identifier
+      responses:
+        '200':
+          description: Charge details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChargeResponse'
+        '404':
+          description: Charge not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v2/withdrawals:
+    post:
+      operationId: initiateWithdrawal
+      summary: Initiate a withdrawal
+      description: >
+        Initiates a Bitcoin withdrawal to an on-chain address or pays a Lightning Network
+        invoice. Supports LNURL withdrawals for streamlined Lightning payouts.
+      tags:
+        - Withdrawals
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WithdrawalRequest'
+            example:
+              type: ln
+              amount: 5000
+              address: lnbc50u1p3zqvppsp...
+              callback_url: https://example.com/webhooks/withdrawal
+      responses:
+        '200':
+          description: Withdrawal successfully initiated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WithdrawalResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    get:
+      operationId: listWithdrawals
+      summary: List withdrawals
+      description: Returns a list of all withdrawals for the authenticated merchant account.
+      tags:
+        - Withdrawals
+      responses:
+        '200':
+          description: List of withdrawals
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WithdrawalListResponse'
+  /v2/withdrawal/{id}:
+    get:
+      operationId: getWithdrawal
+      summary: Get a withdrawal
+      description: Retrieves the details of an existing withdrawal by its ID.
+      tags:
+        - Withdrawals
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Unique withdrawal identifier
+      responses:
+        '200':
+          description: Withdrawal details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WithdrawalResponse'
+        '404':
+          description: Withdrawal not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v1/refunds:
+    post:
+      operationId: createRefund
+      summary: Create a refund
+      description: >
+        Issues a full or partial refund for a charge back to the original payer's
+        Bitcoin or Lightning address.
+      tags:
+        - Refunds
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefundRequest'
+            example:
+              checkout_id: ch_abc123
+              amount: 10000
+              address: bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh
+              email: customer@example.com
+      responses:
+        '200':
+          description: Refund successfully created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RefundResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    get:
+      operationId: listRefunds
+      summary: List refunds
+      description: Returns a list of all refunds for the authenticated merchant account.
+      tags:
+        - Refunds
+      responses:
+        '200':
+          description: List of refunds
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RefundListResponse'
+  /v1/refund/{id}:
+    get:
+      operationId: getRefund
+      summary: Get a refund
+      description: Retrieves the details of a specific refund by its ID.
+      tags:
+        - Refunds
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Unique refund identifier
+      responses:
+        '200':
+          description: Refund details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RefundResponse'
+        '404':
+          description: Refund not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v1/account/balance:
+    get:
+      operationId: getAccountBalance
+      summary: Get account balance
+      description: Retrieves the current balance for the authenticated merchant account, including Bitcoin and fiat holdings.
+      tags:
+        - Account
+      responses:
+        '200':
+          description: Account balance
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountBalanceResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v1/rates:
+    get:
+      operationId: getExchangeRates
+      summary: Get Bitcoin exchange rates
+      description: Returns real-time Bitcoin exchange rates across all supported fiat currencies.
+      tags:
+        - Rates
+      responses:
+        '200':
+          description: Exchange rates
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExchangeRatesResponse'
+  /v1/currencies:
+    get:
+      operationId: getSupportedCurrencies
+      summary: List supported currencies
+      description: Returns all currencies supported by the OpenNode platform for payment conversion.
+      tags:
+        - Rates
+      responses:
+        '200':
+          description: Supported currencies
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CurrenciesResponse'
+  /v1/static-addresses:
+    post:
+      operationId: createStaticAddress
+      summary: Create a static address
+      description: >
+        Creates a static on-chain Bitcoin address or a static Lightning Network address
+        via LNURL-Pay. Suitable for donation pages and recurring payment scenarios.
+      tags:
+        - Static Addresses
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StaticAddressRequest'
+      responses:
+        '200':
+          description: Static address created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StaticAddressResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    get:
+      operationId: listStaticAddresses
+      summary: List static addresses
+      description: Returns all static addresses for the authenticated merchant account.
+      tags:
+        - Static Addresses
+      responses:
+        '200':
+          description: List of static addresses
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StaticAddressListResponse'
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: >
+        API key obtained from the OpenNode dashboard. Pass the key directly in the
+        Authorization header (no "Bearer" prefix required).
+  schemas:
+    CreateChargeRequest:
+      type: object
+      required:
+        - amount
+      properties:
+        amount:
+          type: integer
+          format: int32
+          description: Amount to collect. Default currency is satoshis unless `currency` is specified.
+          example: 10000
+        currency:
+          type: string
+          description: Three-letter ISO 4217 currency code (uppercase). When provided, `amount` is interpreted in this fiat currency.
+          example: USD
+          pattern: '^[A-Z]{3}$'
+        description:
+          type: string
+          description: Payment description displayed in the payer's wallet.
+          example: Order #1234 payment
+        customer_name:
+          type: string
+          description: Name of the payer.
+          example: Jane Doe
+        customer_email:
+          type: string
+          format: email
+          description: Email address of the payer.
+          example: jane@example.com
+        order_id:
+          type: string
+          description: Merchant internal reference identifier for the order.
+          example: order-1234
+        callback_url:
+          type: string
+          format: uri
+          description: Webhook endpoint URL that receives payment status update notifications.
+          example: https://example.com/webhooks/opennode
+        success_url:
+          type: string
+          format: uri
+          description: URL to redirect the customer after successful payment.
+          example: https://example.com/thank-you
+        auto_settle:
+          type: boolean
+          description: When true, automatically converts the payment to fiat currency. Requires bank account setup.
+          default: false
+        split_to_btc_bps:
+          type: integer
+          format: int32
+          description: Percentage of payment to retain in Bitcoin, expressed in basis points (100 bps = 1%).
+          minimum: 0
+          maximum: 10000
+        ttl:
+          type: integer
+          format: int32
+          description: Time-to-live for the invoice in minutes. Min 10, max 4320 (72 hours). Default 1440 (24 hours).
+          minimum: 10
+          maximum: 4320
+          default: 1440
+        notify_receiver:
+          type: boolean
+          description: When true, sends an email notification to the payer upon payment confirmation.
+          default: false
+    ChargeResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Charge'
+    ChargeListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Charge'
+    Charge:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique charge identifier.
+          example: ch_abc123def456
+        description:
+          type: string
+          description: Payment description.
+        amount:
+          type: integer
+          description: Charge amount in satoshis.
+        status:
+          type: string
+          enum:
+            - unpaid
+            - processing
+            - paid
+            - expired
+          description: Current payment status of the charge.
+        fiat_value:
+          type: number
+          format: float
+          description: Fiat value of the charge at time of creation.
+        currency:
+          type: string
+          description: ISO 4217 fiat currency code.
+        source_fiat_value:
+          type: number
+          format: float
+          description: Source fiat value used for conversion.
+        lightning_invoice:
+          $ref: '#/components/schemas/LightningInvoice'
+        chain_invoice:
+          $ref: '#/components/schemas/ChainInvoice'
+        address:
+          type: string
+          description: On-chain Bitcoin address for payment.
+        created_at:
+          type: integer
+          format: int64
+          description: Unix timestamp of charge creation.
+        order_id:
+          type: string
+          description: Merchant order reference.
+        callback_url:
+          type: string
+          format: uri
+          description: Webhook callback URL.
+        success_url:
+          type: string
+          format: uri
+          description: Post-payment redirect URL.
+        auto_settle:
+          type: boolean
+          description: Whether fiat auto-settlement is enabled.
+    LightningInvoice:
+      type: object
+      properties:
+        expires_at:
+          type: integer
+          format: int64
+          description: Unix timestamp when the Lightning invoice expires.
+        payreq:
+          type: string
+          description: BOLT11 Lightning payment request string.
+    ChainInvoice:
+      type: object
+      properties:
+        address:
+          type: string
+          description: On-chain Bitcoin address.
+        settled_at:
+          type: integer
+          format: int64
+          description: Unix timestamp when the on-chain payment was settled.
+    WithdrawalRequest:
+      type: object
+      required:
+        - type
+        - amount
+        - address
+      properties:
+        type:
+          type: string
+          enum:
+            - chain
+            - ln
+          description: Withdrawal type — `chain` for on-chain Bitcoin, `ln` for Lightning Network.
+          example: ln
+        amount:
+          type: integer
+          format: int32
+          description: Withdrawal amount in satoshis.
+          example: 5000
+        address:
+          type: string
+          description: Destination Bitcoin address (on-chain) or BOLT11 Lightning invoice (ln).
+          example: lnbc50u1p3zqvpp...
+        callback_url:
+          type: string
+          format: uri
+          description: Webhook endpoint for withdrawal status notifications.
+    WithdrawalResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Withdrawal'
+    WithdrawalListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Withdrawal'
+    Withdrawal:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique withdrawal identifier.
+        type:
+          type: string
+          enum:
+            - chain
+            - ln
+          description: Withdrawal type.
+        amount:
+          type: integer
+          description: Withdrawal amount in satoshis.
+        status:
+          type: string
+          enum:
+            - pending
+            - processing
+            - confirmed
+            - failed
+          description: Current status of the withdrawal.
+        address:
+          type: string
+          description: Destination address.
+        fee:
+          type: integer
+          description: Network fee in satoshis.
+        created_at:
+          type: integer
+          format: int64
+          description: Unix timestamp of withdrawal creation.
+        processed_at:
+          type: integer
+          format: int64
+          description: Unix timestamp when the withdrawal was processed.
+    RefundRequest:
+      type: object
+      required:
+        - checkout_id
+        - address
+        - email
+      properties:
+        checkout_id:
+          type: string
+          description: ID of the original charge to refund.
+          example: ch_abc123
+        amount:
+          type: integer
+          format: int32
+          description: Refund amount in satoshis. If omitted, the full charge amount is refunded.
+          example: 10000
+        address:
+          type: string
+          description: Bitcoin or Lightning address to send the refund to.
+          example: bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh
+        email:
+          type: string
+          format: email
+          description: Email address of the customer receiving the refund.
+          example: customer@example.com
+    RefundResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Refund'
+    RefundListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Refund'
+    Refund:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique refund identifier.
+        checkout_id:
+          type: string
+          description: ID of the original charge.
+        amount:
+          type: integer
+          description: Refund amount in satoshis.
+        status:
+          type: string
+          enum:
+            - pending
+            - processing
+            - confirmed
+            - failed
+          description: Current status of the refund.
+        address:
+          type: string
+          description: Destination Bitcoin address for the refund.
+        email:
+          type: string
+          format: email
+          description: Customer email for the refund.
+        created_at:
+          type: integer
+          format: int64
+          description: Unix timestamp of refund creation.
+    AccountBalanceResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            balance:
+              $ref: '#/components/schemas/Balance'
+    Balance:
+      type: object
+      properties:
+        BTC:
+          type: object
+          properties:
+            balance:
+              type: number
+              description: Available Bitcoin balance in satoshis.
+            pending_balance:
+              type: number
+              description: Pending Bitcoin balance in satoshis.
+        USD:
+          type: object
+          properties:
+            balance:
+              type: number
+              description: Available fiat balance (example in USD).
+            pending_balance:
+              type: number
+              description: Pending fiat balance.
+    ExchangeRatesResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          additionalProperties:
+            type: object
+            properties:
+              BTC:
+                type: number
+                description: BTC equivalent value for the currency.
+              EUR:
+                type: number
+              SATS:
+                type: number
+          description: Map of currency codes to their exchange rates.
+          example:
+            USD:
+              BTC: 0.0000148
+              EUR: 0.91
+              SATS: 1484
+    CurrenciesResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              code:
+                type: string
+                description: ISO 4217 currency code.
+                example: USD
+              name:
+                type: string
+                description: Full currency name.
+                example: United States Dollar
+              symbol:
+                type: string
+                description: Currency symbol.
+                example: $
+    StaticAddressRequest:
+      type: object
+      properties:
+        description:
+          type: string
+          description: Description for the static address, displayed to payers.
+        min_amount:
+          type: integer
+          description: Minimum payment amount in satoshis (for LNURL-Pay).
+        max_amount:
+          type: integer
+          description: Maximum payment amount in satoshis (for LNURL-Pay).
+        callback_url:
+          type: string
+          format: uri
+          description: Webhook endpoint for payment notifications.
+    StaticAddressResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/StaticAddress'
+    StaticAddressListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/StaticAddress'
+    StaticAddress:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique static address identifier.
+        address:
+          type: string
+          description: On-chain Bitcoin address or Lightning address.
+        type:
+          type: string
+          enum:
+            - chain
+            - lnurl
+          description: Address type.
+        lnurl:
+          type: string
+          description: LNURL-Pay encoded string for Lightning static addresses.
+        description:
+          type: string
+          description: Description shown to payers.
+        created_at:
+          type: integer
+          format: int64
+          description: Unix timestamp of address creation.
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Human-readable error message.
+          example: Invalid API key
+        code:
+          type: integer
+          description: Error code.
+          example: 401
