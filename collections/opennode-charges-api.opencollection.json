@@ -1,0 +1,85 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "OpenNode Account Charges API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "Authorization",
+      "value": "{{Authorization}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Charges",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List charges",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.opennode.com/v1/charges",
+            "params": [
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Page number for pagination"
+              },
+              {
+                "name": "search_after",
+                "value": "",
+                "type": "query",
+                "description": "Cursor-based pagination — ID of the last record on the previous page"
+              }
+            ]
+          },
+          "docs": "Returns a list of all charges for the authenticated merchant account."
+        },
+        {
+          "info": {
+            "name": "Create a charge",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.opennode.com/v1/charges",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new Bitcoin payment charge. Returns a Lightning Network BOLT11 invoice and an on-chain Bitcoin address for the customer to pay. Webhooks notify the merchant upon payment confirmation.\n"
+        },
+        {
+          "info": {
+            "name": "Get a charge",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.opennode.com/v1/charge/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Unique charge identifier"
+              }
+            ]
+          },
+          "docs": "Retrieves the details of an existing charge by its ID."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

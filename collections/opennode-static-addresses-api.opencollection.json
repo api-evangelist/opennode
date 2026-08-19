@@ -1,0 +1,52 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "OpenNode Account Static Addresses API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "Authorization",
+      "value": "{{Authorization}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Static Addresses",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List static addresses",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.opennode.com/v1/static-addresses"
+          },
+          "docs": "Returns all static addresses for the authenticated merchant account."
+        },
+        {
+          "info": {
+            "name": "Create a static address",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.opennode.com/v1/static-addresses",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a static on-chain Bitcoin address or a static Lightning Network address via LNURL-Pay. Suitable for donation pages and recurring payment scenarios.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

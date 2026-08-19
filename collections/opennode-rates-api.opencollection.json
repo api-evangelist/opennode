@@ -1,0 +1,48 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "OpenNode Account Rates API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "Authorization",
+      "value": "{{Authorization}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Rates",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get Bitcoin exchange rates",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.opennode.com/v1/rates"
+          },
+          "docs": "Returns real-time Bitcoin exchange rates across all supported fiat currencies."
+        },
+        {
+          "info": {
+            "name": "List supported currencies",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.opennode.com/v1/currencies"
+          },
+          "docs": "Returns all currencies supported by the OpenNode platform for payment conversion."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

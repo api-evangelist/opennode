@@ -1,0 +1,71 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "OpenNode Account Withdrawals API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "Authorization",
+      "value": "{{Authorization}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Withdrawals",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List withdrawals",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.opennode.com/v2/withdrawals"
+          },
+          "docs": "Returns a list of all withdrawals for the authenticated merchant account."
+        },
+        {
+          "info": {
+            "name": "Initiate a withdrawal",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.opennode.com/v2/withdrawals",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Initiates a Bitcoin withdrawal to an on-chain address or pays a Lightning Network invoice. Supports LNURL withdrawals for streamlined Lightning payouts.\n"
+        },
+        {
+          "info": {
+            "name": "Get a withdrawal",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.opennode.com/v2/withdrawal/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Unique withdrawal identifier"
+              }
+            ]
+          },
+          "docs": "Retrieves the details of an existing withdrawal by its ID."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

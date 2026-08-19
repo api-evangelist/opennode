@@ -1,0 +1,560 @@
+{
+  "item": [
+    {
+      "id": "a811332f-33d3-42ec-a21c-ea6ce48774e1",
+      "name": "Charges",
+      "description": {
+        "content": "Create and manage Bitcoin payment charges",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "d095e514-4c0f-4807-a073-2c6882423247",
+          "name": "Create a charge",
+          "request": {
+            "name": "Create a charge",
+            "description": {
+              "content": "Creates a new Bitcoin payment charge. Returns a Lightning Network BOLT11 invoice and an on-chain Bitcoin address for the customer to pay. Webhooks notify the merchant upon payment confirmation.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "charges"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": \"<integer>\",\n  \"currency\": \"<string>\",\n  \"description\": \"<string>\",\n  \"customer_name\": \"<string>\",\n  \"customer_email\": \"<email>\",\n  \"order_id\": \"<string>\",\n  \"callback_url\": \"<uri>\",\n  \"success_url\": \"<uri>\",\n  \"auto_settle\": false,\n  \"split_to_btc_bps\": \"<integer>\",\n  \"ttl\": 1440,\n  \"notify_receiver\": false\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "6c5dbbf3-3914-4ada-afdf-04f7c7542426",
+              "name": "Charge successfully created",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "charges"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"amount\": 10000,\n  \"currency\": \"USD\",\n  \"description\": \"Order\",\n  \"customer_name\": \"Jane Doe\",\n  \"customer_email\": \"jane@example.com\",\n  \"order_id\": \"order-1234\",\n  \"callback_url\": \"https://example.com/webhooks/opennode\",\n  \"success_url\": \"https://example.com/thank-you\",\n  \"auto_settle\": false,\n  \"ttl\": 1440\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"id\": \"ch_abc123def456\",\n    \"description\": \"string\",\n    \"amount\": 3306,\n    \"status\": \"expired\",\n    \"fiat_value\": 1575.7292840778036,\n    \"currency\": \"string\",\n    \"source_fiat_value\": 8337.176220378637,\n    \"lightning_invoice\": {\n      \"expires_at\": 9237,\n      \"payreq\": \"string\"\n    },\n    \"chain_invoice\": {\n      \"address\": \"string\",\n      \"settled_at\": 6824\n    },\n    \"address\": \"string\",\n    \"created_at\": 7053,\n    \"order_id\": \"string\",\n    \"callback_url\": \"https://GOiOMTxWMQJLnQWBALZdrT.gbrmEMe76MK1tiXjIugZSV1B1zZbrwM,JeMn,OXdhiny6NMIILewHOb6qo+gal\",\n    \"success_url\": \"http://TpbIUBOKTdGXnqHrxSxuvvDfpyJ.amotkLKxIFFRkY8bCz,pTNmbFeKMNFS+zKErNMu1imNIh8agR\",\n    \"auto_settle\": false\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "dde0840b-b2da-41ba-8840-95bf3084c4b3",
+              "name": "Bad request — invalid parameters",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "charges"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"amount\": 10000,\n  \"currency\": \"USD\",\n  \"description\": \"Order\",\n  \"customer_name\": \"Jane Doe\",\n  \"customer_email\": \"jane@example.com\",\n  \"order_id\": \"order-1234\",\n  \"callback_url\": \"https://example.com/webhooks/opennode\",\n  \"success_url\": \"https://example.com/thank-you\",\n  \"auto_settle\": false,\n  \"ttl\": 1440\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Invalid API key\",\n  \"code\": 401\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "076ba168-05a8-434a-b20e-41a0ae9f12d1",
+              "name": "Unauthorized — missing or invalid API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "charges"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"amount\": 10000,\n  \"currency\": \"USD\",\n  \"description\": \"Order\",\n  \"customer_name\": \"Jane Doe\",\n  \"customer_email\": \"jane@example.com\",\n  \"order_id\": \"order-1234\",\n  \"callback_url\": \"https://example.com/webhooks/opennode\",\n  \"success_url\": \"https://example.com/thank-you\",\n  \"auto_settle\": false,\n  \"ttl\": 1440\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Invalid API key\",\n  \"code\": 401\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "dc01942c-da39-4f51-8402-485416f59321",
+          "name": "List charges",
+          "request": {
+            "name": "List charges",
+            "description": {
+              "content": "Returns a list of all charges for the authenticated merchant account.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "charges"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number for pagination"
+                },
+                {
+                  "disabled": false,
+                  "key": "search_after",
+                  "value": "<string>",
+                  "description": "Cursor-based pagination — ID of the last record on the previous page"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "174c2b7e-c265-41ea-b928-f938fd65fa27",
+              "name": "List of charges",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "charges"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "search_after",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": \"ch_abc123def456\",\n      \"description\": \"string\",\n      \"amount\": 6321,\n      \"status\": \"expired\",\n      \"fiat_value\": 5759.652658672073,\n      \"currency\": \"string\",\n      \"source_fiat_value\": 8046.165340385706,\n      \"lightning_invoice\": {\n        \"expires_at\": 8740,\n        \"payreq\": \"string\"\n      },\n      \"chain_invoice\": {\n        \"address\": \"string\",\n        \"settled_at\": 1592\n      },\n      \"address\": \"string\",\n      \"created_at\": 9155,\n      \"order_id\": \"string\",\n      \"callback_url\": \"http://yHIIcIrlmoTbHQUIHl.qvuI2.gmMcN,8m6ZdsSorfRMFqgYdSGLJq-B399,WiUiWCUPYFApwcR,6Tg7U9rCogz8e\",\n      \"success_url\": \"http://zLEgDYHIc.ddynI6yrZ+SaRZrKZhC,8P8Ye3D2BYthRrLXiHHr+FGZ.ZwXbrRNDb\",\n      \"auto_settle\": true\n    },\n    {\n      \"id\": \"ch_abc123def456\",\n      \"description\": \"string\",\n      \"amount\": 4120,\n      \"status\": \"processing\",\n      \"fiat_value\": 9537.142596847532,\n      \"currency\": \"string\",\n      \"source_fiat_value\": 2444.1571851710055,\n      \"lightning_invoice\": {\n        \"expires_at\": 7352,\n        \"payreq\": \"string\"\n      },\n      \"chain_invoice\": {\n        \"address\": \"string\",\n        \"settled_at\": 194\n      },\n      \"address\": \"string\",\n      \"created_at\": 3671,\n      \"order_id\": \"string\",\n      \"callback_url\": \"http://CKeFixtpNcmfRo.zlhA+SU0Ti8vO6\",\n      \"success_url\": \"https://xBpEkBnMSGZxKXrINU.wueRO7K+g7O5z73QfLAfh6KHXgBfCytxxfcMiNs-MuQkTow-eyLvkAr569vtooXqRO\",\n      \"auto_settle\": false\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b92bc11c-7c41-4bfd-af54-00e94f47eda3",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "charges"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "search_after",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Invalid API key\",\n  \"code\": 401\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "52be4432-6d3b-4e22-8ae1-3b048af0dc1e",
+          "name": "Get a charge",
+          "request": {
+            "name": "Get a charge",
+            "description": {
+              "content": "Retrieves the details of an existing charge by its ID.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "charge",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) Unique charge identifier"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "890a8616-b4eb-42f4-9d4f-8bc48c29d64f",
+              "name": "Charge details",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "charge",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) Unique charge identifier"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"id\": \"ch_abc123def456\",\n    \"description\": \"string\",\n    \"amount\": 3306,\n    \"status\": \"expired\",\n    \"fiat_value\": 1575.7292840778036,\n    \"currency\": \"string\",\n    \"source_fiat_value\": 8337.176220378637,\n    \"lightning_invoice\": {\n      \"expires_at\": 9237,\n      \"payreq\": \"string\"\n    },\n    \"chain_invoice\": {\n      \"address\": \"string\",\n      \"settled_at\": 6824\n    },\n    \"address\": \"string\",\n    \"created_at\": 7053,\n    \"order_id\": \"string\",\n    \"callback_url\": \"https://GOiOMTxWMQJLnQWBALZdrT.gbrmEMe76MK1tiXjIugZSV1B1zZbrwM,JeMn,OXdhiny6NMIILewHOb6qo+gal\",\n    \"success_url\": \"http://TpbIUBOKTdGXnqHrxSxuvvDfpyJ.amotkLKxIFFRkY8bCz,pTNmbFeKMNFS+zKErNMu1imNIh8agR\",\n    \"auto_settle\": false\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "6bd9c9bb-7453-4023-9d02-b9d3ee0ba410",
+              "name": "Charge not found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "charge",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) Unique charge identifier"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"message\": \"Invalid API key\",\n  \"code\": 401\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.opennode.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "Authorization"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "eeeef1b0-6c3b-420b-bd29-1c996e9e1bdf",
+    "name": "OpenNode Account Charges API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "OpenNode is a Bitcoin and Lightning Network payment processor providing a REST API for businesses and developers to accept Bitcoin payments, create payment charges, manage Lightning Network invoices, process on-chain transactions, handle webhooks for real-time payment notifications, initiate Bitcoin withdrawals and payouts, and access payment analytics. The platform supports automatic currency conversion at the time of payment, allowing merchants to settle in local currency or Bitcoin.\n\n\nContact Support:\n Name: OpenNode Support",
+      "type": "text/plain"
+    }
+  }
+}
