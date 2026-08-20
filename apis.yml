@@ -36,6 +36,17 @@ tags:
   - Payment Processing
   - Cryptocurrency
   - Fintech
+  - Webhook
+  - Invoicing
+  - Payouts
+  - LNURL
+tags_raw:
+  - Bitcoin
+  - Lightning Network
+  - Payments
+  - Payment Processing
+  - Cryptocurrency
+  - Fintech
   - Webhooks
   - Invoicing
   - Payouts
@@ -119,6 +130,11 @@ apis:
   baseURL: https://api.opennode.com
   tags:
   - Account
+  - Balances
+  - Activity
+  - Analytics
+  tags_raw:
+  - Account
   - Balance
   - Activity
   - Analytics
@@ -151,6 +167,11 @@ apis:
   humanURL: https://developers.opennode.com/reference
   baseURL: https://api.opennode.com
   tags:
+  - Bitcoin
+  - Exchange Rates
+  - Currency
+  - Pricing
+  tags_raw:
   - Bitcoin
   - Exchange Rates
   - Currencies
