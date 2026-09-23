@@ -1,9 +1,7 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: OpenNode Account Rates API
-  description: 'OpenNode is a Bitcoin and Lightning Network payment processor providing a REST API for businesses and developers to accept Bitcoin payments, create payment charges, manage Lightning Network invoices, process on-chain transactions, handle webhooks for real-time payment notifications, initiate Bitcoin withdrawals and payouts, and access payment analytics. The platform supports automatic currency conversion at the time of payment, allowing merchants to settle in local currency or Bitcoin.
-
-    '
+  title: OpenNode Rates API
+  description: OpenNode is a Bitcoin and Lightning Network payment processor providing a REST API for businesses and developers to accept Bitcoin payments, create payment charges, manage Lightning Network invoices, process on-chain transactions, handle webhooks for real-time payment notifications, initiate Bitcoin withdrawals and payouts, and access payment analytics. The platform supports automatic currency conversion at the time of payment, allowing merchants to settle in local currency or Bitcoin.
   version: 1.0.0
   termsOfService: https://opennode.com/terms/
   contact:

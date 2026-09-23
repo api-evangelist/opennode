@@ -1,9 +1,7 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
   title: OpenNode Account API
-  description: 'OpenNode is a Bitcoin and Lightning Network payment processor providing a REST API for businesses and developers to accept Bitcoin payments, create payment charges, manage Lightning Network invoices, process on-chain transactions, handle webhooks for real-time payment notifications, initiate Bitcoin withdrawals and payouts, and access payment analytics. The platform supports automatic currency conversion at the time of payment, allowing merchants to settle in local currency or Bitcoin.
-
-    '
+  description: OpenNode is a Bitcoin and Lightning Network payment processor providing a REST API for businesses and developers to accept Bitcoin payments, create payment charges, manage Lightning Network invoices, process on-chain transactions, handle webhooks for real-time payment notifications, initiate Bitcoin withdrawals and payouts, and access payment analytics. The platform supports automatic currency conversion at the time of payment, allowing merchants to settle in local currency or Bitcoin.
   version: 1.0.0
   termsOfService: https://opennode.com/terms/
   contact:
@@ -52,6 +50,17 @@ components:
           properties:
             balance:
               $ref: '#/components/schemas/Balance'
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Human-readable error message.
+          example: Invalid API key
+        code:
+          type: integer
+          description: Error code.
+          example: 401
     Balance:
       type: object
       properties:
@@ -73,17 +82,6 @@ components:
             pending_balance:
               type: number
               description: Pending fiat balance.
-    ErrorResponse:
-      type: object
-      properties:
-        message:
-          type: string
-          description: Human-readable error message.
-          example: Invalid API key
-        code:
-          type: integer
-          description: Error code.
-          example: 401
   securitySchemes:
     ApiKeyAuth:
       type: apiKey
