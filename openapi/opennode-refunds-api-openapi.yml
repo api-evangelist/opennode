@@ -93,13 +93,6 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
 components:
   schemas:
-    RefundListResponse:
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/Refund'
     Refund:
       type: object
       properties:
@@ -131,17 +124,13 @@ components:
           type: integer
           format: int64
           description: Unix timestamp of refund creation.
-    ErrorResponse:
+    RefundListResponse:
       type: object
       properties:
-        message:
-          type: string
-          description: Human-readable error message.
-          example: Invalid API key
-        code:
-          type: integer
-          description: Error code.
-          example: 401
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Refund'
     RefundResponse:
       type: object
       properties:
@@ -172,6 +161,17 @@ components:
           format: email
           description: Email address of the customer receiving the refund.
           example: customer@example.com
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Human-readable error message.
+          example: Invalid API key
+        code:
+          type: integer
+          description: Error code.
+          example: 401
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

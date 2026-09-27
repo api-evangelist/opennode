@@ -99,6 +99,38 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
 components:
   schemas:
+    WithdrawalRequest:
+      type: object
+      required:
+      - type
+      - amount
+      - address
+      properties:
+        type:
+          type: string
+          enum:
+          - chain
+          - ln
+          description: Withdrawal type — `chain` for on-chain Bitcoin, `ln` for Lightning Network.
+          example: ln
+        amount:
+          type: integer
+          format: int32
+          description: Withdrawal amount in satoshis.
+          example: 5000
+        address:
+          type: string
+          description: Destination Bitcoin address (on-chain) or BOLT11 Lightning invoice (ln).
+          example: lnbc50u1p3zqvpp...
+        callback_url:
+          type: string
+          format: uri
+          description: Webhook endpoint for withdrawal status notifications.
+    WithdrawalResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Withdrawal'
     Withdrawal:
       type: object
       properties:
@@ -136,33 +168,6 @@ components:
           type: integer
           format: int64
           description: Unix timestamp when the withdrawal was processed.
-    WithdrawalRequest:
-      type: object
-      required:
-      - type
-      - amount
-      - address
-      properties:
-        type:
-          type: string
-          enum:
-          - chain
-          - ln
-          description: Withdrawal type — `chain` for on-chain Bitcoin, `ln` for Lightning Network.
-          example: ln
-        amount:
-          type: integer
-          format: int32
-          description: Withdrawal amount in satoshis.
-          example: 5000
-        address:
-          type: string
-          description: Destination Bitcoin address (on-chain) or BOLT11 Lightning invoice (ln).
-          example: lnbc50u1p3zqvpp...
-        callback_url:
-          type: string
-          format: uri
-          description: Webhook endpoint for withdrawal status notifications.
     WithdrawalListResponse:
       type: object
       properties:
@@ -170,11 +175,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Withdrawal'
-    WithdrawalResponse:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/Withdrawal'
     ErrorResponse:
       type: object
       properties:

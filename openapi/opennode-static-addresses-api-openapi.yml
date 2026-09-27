@@ -61,6 +61,43 @@ paths:
                 $ref: '#/components/schemas/StaticAddressListResponse'
 components:
   schemas:
+    StaticAddressResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/StaticAddress'
+    StaticAddress:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique static address identifier.
+        address:
+          type: string
+          description: On-chain Bitcoin address or Lightning address.
+        type:
+          type: string
+          enum:
+          - chain
+          - lnurl
+          description: Address type.
+        lnurl:
+          type: string
+          description: LNURL-Pay encoded string for Lightning static addresses.
+        description:
+          type: string
+          description: Description shown to payers.
+        created_at:
+          type: integer
+          format: int64
+          description: Unix timestamp of address creation.
+    StaticAddressListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/StaticAddress'
     StaticAddressRequest:
       type: object
       properties:
@@ -88,43 +125,6 @@ components:
           type: integer
           description: Error code.
           example: 401
-    StaticAddress:
-      type: object
-      properties:
-        id:
-          type: string
-          description: Unique static address identifier.
-        address:
-          type: string
-          description: On-chain Bitcoin address or Lightning address.
-        type:
-          type: string
-          enum:
-          - chain
-          - lnurl
-          description: Address type.
-        lnurl:
-          type: string
-          description: LNURL-Pay encoded string for Lightning static addresses.
-        description:
-          type: string
-          description: Description shown to payers.
-        created_at:
-          type: integer
-          format: int64
-          description: Unix timestamp of address creation.
-    StaticAddressResponse:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/StaticAddress'
-    StaticAddressListResponse:
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/StaticAddress'
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

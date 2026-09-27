@@ -42,25 +42,6 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
 components:
   schemas:
-    AccountBalanceResponse:
-      type: object
-      properties:
-        data:
-          type: object
-          properties:
-            balance:
-              $ref: '#/components/schemas/Balance'
-    ErrorResponse:
-      type: object
-      properties:
-        message:
-          type: string
-          description: Human-readable error message.
-          example: Invalid API key
-        code:
-          type: integer
-          description: Error code.
-          example: 401
     Balance:
       type: object
       properties:
@@ -82,6 +63,25 @@ components:
             pending_balance:
               type: number
               description: Pending fiat balance.
+    AccountBalanceResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            balance:
+              $ref: '#/components/schemas/Balance'
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Human-readable error message.
+          example: Invalid API key
+        code:
+          type: integer
+          description: Error code.
+          example: 401
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

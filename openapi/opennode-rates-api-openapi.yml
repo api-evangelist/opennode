@@ -50,26 +50,6 @@ paths:
                 $ref: '#/components/schemas/CurrenciesResponse'
 components:
   schemas:
-    CurrenciesResponse:
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            type: object
-            properties:
-              code:
-                type: string
-                description: ISO 4217 currency code.
-                example: USD
-              name:
-                type: string
-                description: Full currency name.
-                example: United States Dollar
-              symbol:
-                type: string
-                description: Currency symbol.
-                example: $
     ExchangeRatesResponse:
       type: object
       properties:
@@ -91,6 +71,26 @@ components:
               BTC: 1.48e-05
               EUR: 0.91
               SATS: 1484
+    CurrenciesResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              code:
+                type: string
+                description: ISO 4217 currency code.
+                example: USD
+              name:
+                type: string
+                description: Full currency name.
+                example: United States Dollar
+              symbol:
+                type: string
+                description: Currency symbol.
+                example: $
   securitySchemes:
     ApiKeyAuth:
       type: apiKey
