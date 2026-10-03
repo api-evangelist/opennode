@@ -66,6 +66,40 @@ components:
       properties:
         data:
           $ref: '#/components/schemas/StaticAddress'
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Human-readable error message.
+          example: Invalid API key
+        code:
+          type: integer
+          description: Error code.
+          example: 401
+    StaticAddressListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/StaticAddress'
+    StaticAddressRequest:
+      type: object
+      properties:
+        description:
+          type: string
+          description: Description for the static address, displayed to payers.
+        min_amount:
+          type: integer
+          description: Minimum payment amount in satoshis (for LNURL-Pay).
+        max_amount:
+          type: integer
+          description: Maximum payment amount in satoshis (for LNURL-Pay).
+        callback_url:
+          type: string
+          format: uri
+          description: Webhook endpoint for payment notifications.
     StaticAddress:
       type: object
       properties:
@@ -91,40 +125,6 @@ components:
           type: integer
           format: int64
           description: Unix timestamp of address creation.
-    StaticAddressListResponse:
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/StaticAddress'
-    StaticAddressRequest:
-      type: object
-      properties:
-        description:
-          type: string
-          description: Description for the static address, displayed to payers.
-        min_amount:
-          type: integer
-          description: Minimum payment amount in satoshis (for LNURL-Pay).
-        max_amount:
-          type: integer
-          description: Maximum payment amount in satoshis (for LNURL-Pay).
-        callback_url:
-          type: string
-          format: uri
-          description: Webhook endpoint for payment notifications.
-    ErrorResponse:
-      type: object
-      properties:
-        message:
-          type: string
-          description: Human-readable error message.
-          example: Invalid API key
-        code:
-          type: integer
-          description: Error code.
-          example: 401
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

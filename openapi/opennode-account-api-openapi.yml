@@ -42,6 +42,14 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
 components:
   schemas:
+    AccountBalanceResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            balance:
+              $ref: '#/components/schemas/Balance'
     Balance:
       type: object
       properties:
@@ -63,14 +71,6 @@ components:
             pending_balance:
               type: number
               description: Pending fiat balance.
-    AccountBalanceResponse:
-      type: object
-      properties:
-        data:
-          type: object
-          properties:
-            balance:
-              $ref: '#/components/schemas/Balance'
     ErrorResponse:
       type: object
       properties:
