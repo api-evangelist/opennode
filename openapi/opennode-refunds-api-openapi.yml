@@ -93,17 +93,6 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
 components:
   schemas:
-    ErrorResponse:
-      type: object
-      properties:
-        message:
-          type: string
-          description: Human-readable error message.
-          example: Invalid API key
-        code:
-          type: integer
-          description: Error code.
-          example: 401
     RefundListResponse:
       type: object
       properties:
@@ -111,11 +100,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Refund'
-    RefundResponse:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/Refund'
     RefundRequest:
       type: object
       required:
@@ -141,6 +125,22 @@ components:
           format: email
           description: Email address of the customer receiving the refund.
           example: customer@example.com
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Human-readable error message.
+          example: Invalid API key
+        code:
+          type: integer
+          description: Error code.
+          example: 401
+    RefundResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Refund'
     Refund:
       type: object
       properties:

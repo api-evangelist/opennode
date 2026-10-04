@@ -99,29 +99,6 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
 components:
   schemas:
-    WithdrawalResponse:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/Withdrawal'
-    ErrorResponse:
-      type: object
-      properties:
-        message:
-          type: string
-          description: Human-readable error message.
-          example: Invalid API key
-        code:
-          type: integer
-          description: Error code.
-          example: 401
-    WithdrawalListResponse:
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/Withdrawal'
     Withdrawal:
       type: object
       properties:
@@ -186,6 +163,29 @@ components:
           type: string
           format: uri
           description: Webhook endpoint for withdrawal status notifications.
+    WithdrawalResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Withdrawal'
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Human-readable error message.
+          example: Invalid API key
+        code:
+          type: integer
+          description: Error code.
+          example: 401
+    WithdrawalListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Withdrawal'
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

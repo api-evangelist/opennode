@@ -124,84 +124,6 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
 components:
   schemas:
-    Charge:
-      type: object
-      properties:
-        id:
-          type: string
-          description: Unique charge identifier.
-          example: ch_abc123def456
-        description:
-          type: string
-          description: Payment description.
-        amount:
-          type: integer
-          description: Charge amount in satoshis.
-        status:
-          type: string
-          enum:
-          - unpaid
-          - processing
-          - paid
-          - expired
-          description: Current payment status of the charge.
-        fiat_value:
-          type: number
-          format: float
-          description: Fiat value of the charge at time of creation.
-        currency:
-          type: string
-          description: ISO 4217 fiat currency code.
-        source_fiat_value:
-          type: number
-          format: float
-          description: Source fiat value used for conversion.
-        lightning_invoice:
-          $ref: '#/components/schemas/LightningInvoice'
-        chain_invoice:
-          $ref: '#/components/schemas/ChainInvoice'
-        address:
-          type: string
-          description: On-chain Bitcoin address for payment.
-        created_at:
-          type: integer
-          format: int64
-          description: Unix timestamp of charge creation.
-        order_id:
-          type: string
-          description: Merchant order reference.
-        callback_url:
-          type: string
-          format: uri
-          description: Webhook callback URL.
-        success_url:
-          type: string
-          format: uri
-          description: Post-payment redirect URL.
-        auto_settle:
-          type: boolean
-          description: Whether fiat auto-settlement is enabled.
-    LightningInvoice:
-      type: object
-      properties:
-        expires_at:
-          type: integer
-          format: int64
-          description: Unix timestamp when the Lightning invoice expires.
-        payreq:
-          type: string
-          description: BOLT11 Lightning payment request string.
-    ErrorResponse:
-      type: object
-      properties:
-        message:
-          type: string
-          description: Human-readable error message.
-          example: Invalid API key
-        code:
-          type: integer
-          description: Error code.
-          example: 401
     CreateChargeRequest:
       type: object
       required:
@@ -270,6 +192,34 @@ components:
       properties:
         data:
           $ref: '#/components/schemas/Charge'
+    ChargeListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Charge'
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Human-readable error message.
+          example: Invalid API key
+        code:
+          type: integer
+          description: Error code.
+          example: 401
+    LightningInvoice:
+      type: object
+      properties:
+        expires_at:
+          type: integer
+          format: int64
+          description: Unix timestamp when the Lightning invoice expires.
+        payreq:
+          type: string
+          description: BOLT11 Lightning payment request string.
     ChainInvoice:
       type: object
       properties:
@@ -280,13 +230,63 @@ components:
           type: integer
           format: int64
           description: Unix timestamp when the on-chain payment was settled.
-    ChargeListResponse:
+    Charge:
       type: object
       properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/Charge'
+        id:
+          type: string
+          description: Unique charge identifier.
+          example: ch_abc123def456
+        description:
+          type: string
+          description: Payment description.
+        amount:
+          type: integer
+          description: Charge amount in satoshis.
+        status:
+          type: string
+          enum:
+          - unpaid
+          - processing
+          - paid
+          - expired
+          description: Current payment status of the charge.
+        fiat_value:
+          type: number
+          format: float
+          description: Fiat value of the charge at time of creation.
+        currency:
+          type: string
+          description: ISO 4217 fiat currency code.
+        source_fiat_value:
+          type: number
+          format: float
+          description: Source fiat value used for conversion.
+        lightning_invoice:
+          $ref: '#/components/schemas/LightningInvoice'
+        chain_invoice:
+          $ref: '#/components/schemas/ChainInvoice'
+        address:
+          type: string
+          description: On-chain Bitcoin address for payment.
+        created_at:
+          type: integer
+          format: int64
+          description: Unix timestamp of charge creation.
+        order_id:
+          type: string
+          description: Merchant order reference.
+        callback_url:
+          type: string
+          format: uri
+          description: Webhook callback URL.
+        success_url:
+          type: string
+          format: uri
+          description: Post-payment redirect URL.
+        auto_settle:
+          type: boolean
+          description: Whether fiat auto-settlement is enabled.
   securitySchemes:
     ApiKeyAuth:
       type: apiKey
